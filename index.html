@@ -57,42 +57,38 @@
 </div>
 
 <script>
-  // ✅ Exact text to display and copy
-  const text = `loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()`;
+  // The exact Fly GUI text (no redirects, no edits)
+  const text = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()';
 
   const textarea = document.getElementById("sharedText");
   const copyBtn = document.getElementById("copyBtn");
   textarea.value = text;
 
-  // ✅ Copy to clipboard
+  // Copy and show "Text copied!" on button
   copyBtn.addEventListener("click", () => {
     function showCopied() {
       const originalText = copyBtn.textContent;
       copyBtn.textContent = "Text copied!";
-      copyBtn.style.backgroundColor = "#28a745"; // green
+      copyBtn.style.backgroundColor = "#28a745"; // green flash
       setTimeout(() => {
         copyBtn.textContent = originalText;
         copyBtn.style.backgroundColor = "#007bff";
       }, 2000);
     }
 
-    function fallbackCopy() {
-      textarea.select();
-      textarea.setSelectionRange(0, 99999);
-      try {
-        document.execCommand("copy");
-        showCopied();
-      } catch {
-        alert("Copy failed. Please copy manually.");
-      }
-    }
-
+    // Copy using modern or fallback method
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(textarea.value)
         .then(showCopied)
-        .catch(fallbackCopy);
+        .catch(() => {
+          textarea.select();
+          document.execCommand("copy");
+          showCopied();
+        });
     } else {
-      fallbackCopy();
+      textarea.select();
+      document.execCommand("copy");
+      showCopied();
     }
   });
 </script>
